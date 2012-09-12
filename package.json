@@ -1,0 +1,15 @@
+{
+  "name": "node-reader",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.0.0rc4",
+    "connect": "2.4.5",
+    "jade": "*",
+    "adm-zip" : "0.1.5",
+    "node-native-zip" : "1.1.0"
+  }
+}

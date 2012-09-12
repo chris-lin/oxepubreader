@@ -1,0 +1,15 @@
+.nodeReaderNavfluid {
+
+}
+.nodeReaderList {
+    overflow: hidden;
+    
+}
+#nodeReaderIframe {
+    border:1px solid #000;
+    width:100%;
+    height:100%;
+}
+.nodeReaderContainer {
+    height:480px;
+}

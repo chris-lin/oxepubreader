@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  include includes/navbar
+  .container-fluid.nodeReaderNavfluid
+    .row-fluid
+      .span3
+        .well.sidebar-nav
+          ul.nav.nav-list.nodeReaderList
+            li.nav-header= bookname
+            - for (var key in links)
+              li
+                a(href='javascript: void(0)').pageButton= links[key]
+      .span9
+        .hero-unit.nodeReaderContainer
+            iframe(id='nodeReaderIframe' )
+  

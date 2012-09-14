@@ -1,5 +1,4 @@
 
-
 exports.index = function ( req, res ){
     var zipInfo = req.zipInfo;
     var zipEntries = zipInfo.zipEntries;
@@ -21,10 +20,8 @@ exports.index = function ( req, res ){
         'links': linksArray.sort() 
     };
     res.redirect( '/reader' );
-    //~ 
-    //if (entry.path.split('.').pop() == 'html'){
+    
 };
-//'title': 'OXEPUBREADER',
 
 exports.read = function ( req, res ){
     //console.log(req.target)
@@ -47,10 +44,29 @@ exports.getData = function ( req, res ){
     var encode = "utf8";
     
     var file = bookinfo.path + '/' + req.body.page;
-    fs.readFile(file, encode, function(err, file) {
-        //console.log(file)
-        //res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(file);
-        res.end();
+    
+    fs.exists(file, function (exists) {
+        if (exists) {
+            fs.readFile(file, encode, function(err, file) {
+            
+                //res.writeHead(200, {'Content-Type': 'text/html'});
+                res.write(file);
+                res.end();
+            });
+        }
+    });
+};
+
+exports.test = function ( req, res ){
+    var file = req.query.file;
+    console.log(typeof(file));
+    var fs = require("fs");
+    fs.exists(file, function (exists) {
+        util.debug(exists ? "it's there" : "no passwd!");
+        if (exists) {
+            console.log('yo');
+        } else {
+            console.log('no');
+        }
     });
 };

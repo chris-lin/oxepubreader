@@ -15,7 +15,10 @@ $(document).ready(function () {
         request.done(function(msg) {
             
             $('body', container).html(msg);
-            //console.log( msg );
+            var sourceHeight = $('body', container).height();
+            
+            $('#nodeReaderIframe').height(sourceHeight + 100);
+            console.log( sourceHeight );
         });
         
         request.fail(function(jqXHR, textStatus) {

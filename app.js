@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , archive = require('./routes/archive')
   , reader = require('./routes/reader')
+  , fileupload = require('./routes/fileupload')
   , http = require('http')
   , path = require('path');
 
@@ -40,11 +41,12 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+app.get('/', fileupload.index);
 app.get('/unzip', archive.unzip, reader.index );
 app.get('/reader', reader.read );
 app.post('/getData', reader.getData );
-app.post('/file_upload',routes.home );
+app.post('/file_upload',fileupload.fileupload );
+app.get('/test', reader.test );
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

@@ -13,7 +13,9 @@ $(document).ready(function () {
         toggleNext(page.isNext)
     });
     
-    
+    $('#home').on('click', function () {
+        page.initFirstPage();
+    });
     
     $('.pageTurnArea').on('click', function () {
         if ( $(this).hasClass('arrowLeft')) {

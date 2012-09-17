@@ -9,12 +9,11 @@ block navbar
               a.brand(href='#') #{title}
               ul.nav
                 li
-                  a(href='javascript: void(0)') #{bookname}
-
+                  a(href='javascript: void(0)', id='home') #{bookname}
               p.navbar-text.pull-right
                 ul.nav.pull-right.dropdown
-                  a.btn.btn-inverse.dropdown-toggle(data-toggle='dropdown', href='#')
-                    | TOC 
+                  a.btn.btn-inverse.dropdown-toggle(data-toggle='dropdown', href='#').navTitle
+                    | 目錄 
                     span.caret
                   ul.dropdown-menu
                     - for (var key in links)

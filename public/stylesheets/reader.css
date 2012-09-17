@@ -1,16 +1,62 @@
-.nodeReaderNavfluid {
-
+.nodeReaderNav {
+    z-index:400;
+    
 }
 .nodeReaderList {
     overflow: hidden;
     
 }
 #nodeReaderIframe {
-    border:1px solid #000;
+    border:0px solid #000;
     width:100%;
- 
     overflow:hidden;
 }
 .nodeReaderContainer {
+    position: absolute;
+    left: 12%;
+    right: 12%;
+}
+
+#nodeReaderPageTurn {
+    position: absolute;
+    z-index:300;
+    left:0;
+    right:0;
+    top:50px;
+    bottom:0;
     
+}
+.pageTurnArea {
+    width:40px;
+    position: absolute;
+    z-index:300;
+    top:0;
+    bottom:0;
+}
+.arrowLeft {
+    left:0;
+}
+.arrowLeft .arrowButton {
+    background: url("../images/tri-left.png") repeat transparent;
+}
+
+.arrowRight {
+    right:0;
+}
+
+.arrowRight .arrowButton {
+    background: url("../images/tri-right.png") repeat scroll -420px -356px transparent;
+}
+.arrowButton {
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative
+}
+@media (min-width: 979px) {
+    #nodeReaderPageTurn {
+        top:38px;
+    }
 }

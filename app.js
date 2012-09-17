@@ -41,12 +41,13 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+//app.get('/index', routes.index);
 app.get('/', fileupload.index);
 app.get('/unzip', archive.unzip, reader.index );
 app.get('/reader', reader.read );
 app.post('/getData', reader.getData );
 app.post('/file_upload',fileupload.fileupload );
-app.get('/test', reader.test );
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

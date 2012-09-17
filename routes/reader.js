@@ -1,3 +1,4 @@
+var fs = require("fs");
 
 exports.index = function ( req, res ){
     var zipInfo = req.zipInfo;
@@ -40,16 +41,14 @@ exports.read = function ( req, res ){
 exports.getData = function ( req, res ){
     var bookinfo = req.session.book;
     //console.log(bookinfo.path);
-    var fs = require("fs");
+    //var fs = require("fs");
     var encode = "utf8";
     
     var file = bookinfo.path + '/' + req.body.page;
     
     fs.exists(file, function (exists) {
         if (exists) {
-            fs.readFile(file, encode, function(err, file) {
-            
-                //res.writeHead(200, {'Content-Type': 'text/html'});
+            fs.readFile(file, encode, function(err, file) { 
                 res.write(file);
                 res.end();
             });
@@ -57,16 +56,3 @@ exports.getData = function ( req, res ){
     });
 };
 
-exports.test = function ( req, res ){
-    var file = req.query.file;
-    console.log(typeof(file));
-    var fs = require("fs");
-    fs.exists(file, function (exists) {
-        util.debug(exists ? "it's there" : "no passwd!");
-        if (exists) {
-            console.log('yo');
-        } else {
-            console.log('no');
-        }
-    });
-};

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Chapter 8. Extending Node</title><link rel="stylesheet" href="core.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"/></head><body><div class="chapter" title="Chapter 8. Extending Node"><div class="titlepage"><div><div><h1 class="title"><a id="chapter_9"/>Chapter 8. Extending Node</h1></div></div></div><div class="sect1" title="Modules"><div class="titlepage"><div><div><h1 class="title"><a id="I_sect15_d1e13553"/>Modules</h1></div></div></div><p>The module system in <a id="no8.1" class="indexterm"/>Node makes it easy to create extensions to the platform. It
+    is simple to learn and enables us to easily share reusable library code.
+    The Node module system is based on the commonJS module<a id="I_indexterm5_d1e13564" class="indexterm"/> specification. We’ve already used lots of modules in the
+    previous chapters, but here we’ll study how to create our own modules.
+    <a class="xref" href="ch08.html#example8-1" title="Example 8-1. A simple module">Example 8-1</a> shows one simple implementation.</p><div class="example"><a id="example8-1"/><p class="title">Example 8-1. A simple module</p><div class="example-contents"><pre class="programlisting">exports.myMethod = function() { console.log('Method output') };
+exports.property = "blue";</pre></div></div><p>As you can see, writing a module is as simple as attaching
+    properties to the <code class="literal">exports</code> global
+    variable. Any script that is included with <code class="literal">require()</code> will return its <code class="literal">exports</code> object. This means that everything
+    returned from <code class="literal">require()</code> is in a
+    closure, so you can use private variables in a module that are not exposed
+    to the main scope of the program.</p><p>Node developers have created a few conventions around modules.
+    First, it’s typical to create factory methods for a class. Although you
+    might also expose the class itself, factory methods give us a clean way to
+    instantiate objects. For I/O-related classes, one of the arguments is
+    normally a callback for either the I/O being done or one of its most
+    common aspects. For example, <code class="literal">http.Server</code> has a factory method called <code class="literal">http.createServer()</code> that takes a callback
+    function for the <code class="literal">request</code> event, the
+    most commonly used <code class="literal">http.Server</code>
+    event.</p></div></div></body></html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Add-ons</title><link rel="stylesheet" href="core.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"/></head><body><div class="sect1" title="Add-ons"><div class="titlepage"><div><div><h1 class="title"><a id="I_sect15_d1e13881"/>Add-ons</h1></div></div></div><p>Whereas modules <a id="I_indexterm5_d1e13886" class="indexterm"/>are the JavaScript extensions for Node,
+    <em class="firstterm">add-ons</em> are the C/C++ extensions. Add-ons
+    frequently wrap existing system libraries and expose their functionality
+    to Node. They can, of course, create new functionality too, although most
+    people choose to do that in JavaScript for obvious reasons. Add-ons are
+    dynamically linked shared objects.</p><p>To create an add-on, you’ll need at least two sets of files: the
+    add-on code and the build files. Node uses the <code class="literal">waf</code> build system written in Python. Let’s start
+    with a “Hello World” example. <a class="xref" href="ch08s03.html#example8-2" title="Example 8-2. A simple add-on for Node">Example 8-2</a> is equivalent
+    to <code class="literal">exports.hello = "world";</code> in
+    JavaScript.</p><div class="example"><a id="example8-2"/><p class="title">Example 8-2. A simple add-on for Node</p><div class="example-contents"><pre class="programlisting">#include &lt;v8.h&gt;
+
+using namespace v8;
+
+extern "C" void init (Handle&lt;Object&gt; target) {
+  HandleScope scope;
+  target-&gt;Set(String::New("hello"), String::New("world"));
+}</pre></div></div><p>The first thing this code needs to do is include the <code class="literal">v8</code> header file because Node is built on top of
+    V8. This provides a lot of standard objects that we will use. Next, we
+    declare the namespace. Then we create the <em class="firstterm">wrapper</em>,
+    which is required by all add-ons. The wrapper functions like the <code class="literal">exports</code> global variable for JavaScript modules.
+    We’ll hang everything we expose from the add-on off a <a id="I_indexterm5_d1e13919" class="indexterm"/>function with the signature <code class="literal">extern
+    'C' void init (Handle&lt;Object&gt; target)</code>.</p></div></body></html>

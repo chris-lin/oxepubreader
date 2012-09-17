@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Socket.IO</title><link rel="stylesheet" href="core.css" type="text/css"/><meta name="generator" content="DocBook XSL Stylesheets V1.74.0"/></head><body><div class="sect1" title="Socket.IO"><div class="titlepage"><div><div><h1 class="title"><a id="I_sect14_d1e13073"/>Socket.IO</h1></div></div></div><p>Socket.IO is a simple little <a id="so7.2" class="indexterm"/>library that’s a lot like Node’s core <code class="literal">net</code> library. Socket.IO allows you to send
+    messages back and forth with browser clients that connect with your Node
+    server, using an efficient, low-level socket mechanism. One of the nice
+    things about the module is that it provides a shared interface between the
+    browser and the server. That is, you can write the same JavaScript on both
+    in order to do messaging work once you have a connection
+    established.</p><p>Socket.IO is so named because it supports the HTML5 WebSockets
+    standard<a id="I_indexterm4_d1e13089" class="indexterm"/> on <a id="I_indexterm4_d1e13093" class="indexterm"/>browsers that support it (and have it enabled). Fortunately,
+    the library also supports a number of fallbacks:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>WebSocket</p></li><li class="listitem"><p>WebSocket over Flash</p></li><li class="listitem"><p>XHR Polling</p></li><li class="listitem"><p>XHR Multipart Streaming</p></li><li class="listitem"><p>Forever Iframe</p></li><li class="listitem"><p>JSONP Polling</p></li></ul></div><p>These options ensure that you’ll be able to have some kind of
+    persistent connection to the browser in almost any environment. The
+    Socket.IO module includes the code to power these connection paths on both
+    the browser and the server side with the same API.</p><p>Instantiating Socket.IO is as simple as including the module and
+    creating a server. One of the things that’s a little different about
+    Socket.IO is that it requires an HTTP server as well; see <a class="xref" href="ch07s02.html#example7-16" title="Example 7-16. Creating a Socket.IO server">Example 7-16</a>.</p><div class="example"><a id="example7-16"/><p class="title">Example 7-16. Creating a Socket.IO server</p><div class="example-contents"><pre class="programlisting">    var http = require('http'), 
+    io = require('socket.io');
+    
+server = http.createServer();
+server.on('request', function(req, res){
+  //Typical HTTP server stuff
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World');
+});
+
+server.listen(80);
+
+var socket = io.listen(server);
+
+socket.on('connection', function(client){
+  console.log('Client connected');
+});</pre></div></div><p>The <a id="I_indexterm4_d1e13131" class="indexterm"/><a id="I_indexterm4_d1e13136" class="indexterm"/>HTTP server in this example could do anything. In this case,
+    we simply return “Hello World.” However, Socket.IO doesn’t care what the
+    HTTP server will do; it simply wraps its own event listener around all
+    requests to your server. This listener will look for any requests for
+    Socket.IO’s client libraries and service these requests. It passes on all
+    others to be handled by the HTTP server, which will function as
+    usual.</p><p>The example creates a <code class="literal">socket.io</code>
+    server by <a id="I_indexterm4_d1e13147" class="indexterm"/>calling <code class="literal">io.listen()</code>,
+    which is a factory <a id="I_indexterm4_d1e13156" class="indexterm"/>method for the <code class="literal">Listener</code>
+    class. <code class="literal">listen()</code> takes a function as an
+    argument, which it uses as a callback when a client connects to the
+    server. Because the sockets are persistent connections, you aren’t dealing
+    with a <code class="literal">req</code> and <code class="literal">res</code> object as you do with an HTTP server. As
+    with <code class="literal">net</code>, you need to use the passed
+    <code class="literal">client</code> object to communicate with each
+    browser. Of course, it’s also important to have some code in the browser
+    (<a class="xref" href="ch07s02.html#web_client_socket.io" title="Example 7-17. A small web page to interact with a Socket.IO server">Example 7-17</a>) to interact with the
+    server.</p><div class="example"><a id="web_client_socket.io"/><p class="title">Example 7-17. A small web page to interact with a Socket.IO server</p><div class="example-contents"><pre class="programlisting">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;script src="/socket.io/socket.io.js"&gt;&lt;/script&gt; 
+    &lt;script&gt; 
+      var socket = io.connect('http://localhost:8080');
+      socket.on('message', function(data){ console.log(data) }) 
+    &lt;/script&gt; 
+  &lt;/body&gt;
+&lt;/html&gt;</pre></div></div><p>This simple page starts by loading the necessary Socket.IO client
+    library directly from the Node server, which is localhost on port 8080 in
+    this case.</p><div class="note" title="Note"><h3 class="title">Note</h3><p>Although port 80 is the standard HTTP port, port 8080 is more
+      convenient during development because many developers run web servers
+      locally for testing that would interfere with Node’s work. In addition,
+      many Linux systems have built-in security policies preventing
+      nonadministrator users from using port 80, so it is more convenient to
+      use a higher number.</p></div><p>Next, we create a new <code class="literal">Socket</code>
+    object with the hostname of the Socket.IO server we are connecting to. We
+    ask the <code class="literal">Socket</code> to connect with <code class="literal">socket.connect()</code>. Then <a id="I_indexterm4_d1e13203" class="indexterm"/>we add a listener for the <code class="literal">message</code> event. Notice how the API is like a Node
+    API. Whenever the server sends this client a message, the client will
+    output it to the browser’s console window.</p><p>Now let’s modify our server to send this page to clients so we can
+    test it (<a class="xref" href="ch07s02.html#example7-18" title="Example 7-18. A simple Socket.IO server">Example 7-18</a>).</p><div class="example"><a id="example7-18"/><p class="title">Example 7-18. A simple Socket.IO server</p><div class="example-contents"><pre class="programlisting">    var http = require('http'), 
+    io = require('socket.io'),
+    fs = require('fs');
+
+var sockFile = fs.readFileSync('socket.html');
+
+server = http.createServer();
+server.on('request', function(req, res){
+  res.writeHead(200, {'content-type': 'text/html'});
+  res.end(sockFile);  
+});
+
+server.listen(8080);
+
+var socket = io.listen(server);
+
+socket.on('connection', function(client){
+  console.log('Client connected');
+  client.send('Welcome client ' + client.sessionId);
+});</pre></div></div><p>The most striking change in this example is the addition of the
+    <code class="literal">fs.readFileSync</code> function, which brings
+    the web page’s external file into the socket server. Now instead of
+    responding to web browser requests with “Hello World,” the Node server
+    will respond with the contents of <em class="filename">socket.html</em>.
+    Because<a id="I_indexterm4_d1e13229" class="indexterm"/> <code class="literal">readFileSync</code> is a
+    synchronous function, it will block Node’s event loop until the file is
+    read, ensuring that the file is ready to be delivered to clients
+    immediately when the server becomes available for connections.</p><p>Now whenever anyone requests anything from the server, unless it is
+    a request to the Socket.IO client library, he will get a copy of
+    <em class="filename">socket.html</em> (which might be the code in <a class="xref" href="ch07s02.html#web_client_socket.io" title="Example 7-17. A small web page to interact with a Socket.IO server">Example 7-17</a>). The callback for connections has been
+    extended to send a welcome message to clients, and a client running the
+    code from <a class="xref" href="ch07s02.html#example7-18" title="Example 7-18. A simple Socket.IO server">Example 7-18</a> might get a message in its
+    console like <code class="literal">Welcome client
+    17844937089830637</code>. Each client gets its own <code class="literal">sessionId</code>. Currently, the ID is an integer
+    <a id="I_indexterm4_d1e13254" class="indexterm"/>generated using <code class="literal">Math.random()</code>.</p><div class="sect2" title="Namespaces"><div class="titlepage"><div><div><h2 class="title"><a id="id3307936"/>Namespaces</h2></div></div></div><p>Creating websockets as <a id="so7.2.1" class="indexterm"/><a id="na7.2.1" class="indexterm"/>shown is fine when you are in full control of your
+      application and architecture, but this will quickly lead to conflicts
+      when you are attaching them to an existing application that uses sockets
+      or when you are writing a service to be plugged into someone else’s
+      project. <a class="xref" href="ch07s02.html#example7-19" title="Example 7-19. A modified web page to interact with Socket.IO namespaces">Example 7-19</a> demonstrates how namespaces
+      avoid this problem by effectively dividing Socket.IO’s listeners into
+      channels.</p><div class="example"><a id="example7-19"/><p class="title">Example 7-19. A modified web page to interact with Socket.IO
+        namespaces</p><div class="example-contents"><pre class="programlisting">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;script src="/socket.io/socket.io.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+      var upandrunning = io.connect('http://localhost:8080/upandrunning');
+      var weather = io.connect('http://localhost:8080/weather');
+      upandrunning.on('message', function(data){
+        document.write('&lt;br /&gt;&lt;br /&gt;Node: Up and Running Update&lt;br /&gt;');
+        document.write(data);
+      });
+      weather.on('message', function(data){
+        document.write('&lt;br /&gt;&lt;br /&gt;Weather Update&lt;br /&gt;');
+        document.write(data);
+      });
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre></div></div><p>This updated <em class="filename">socket.html</em> makes two Socket.IO
+      connections, one to
+      <span class="emphasis"><em>http://localhost:8080/upandrunning</em></span> and the other to
+      <span class="emphasis"><em>http://localhost:8080/weather</em></span>. Each connection has
+      its own variable and its own <code class="literal">.on()</code>
+      event listener. Apart from these differences, working with Socket.IO
+      remains the same. Instead of logging to the console, <a class="xref" href="ch07s02.html#example7-20" title="Example 7-20. A namespace-enabled Socket.IO server">Example 7-20</a> displays its message results within the web
+      browser window.</p><div class="example"><a id="example7-20"/><p class="title">Example 7-20. A namespace-enabled Socket.IO server</p><div class="example-contents"><pre class="programlisting">var sockFile = fs.readFileSync('socket.html');
+
+server = http.createServer();
+server.on('request', function(req, res){
+  res.writeHead(200, {'content-type': 'text/html'});
+  res.end(sockFile);
+});
+
+server.listen(8080);
+
+var socket = io.listen(server);
+
+socket.of('/upandrunning')
+  .on('connection', function(client){
+    console.log('Client connected to Up and Running namespace.');
+    client.send("Welcome to 'Up and Running'");
+});
+
+socket.of('/weather')
+  .on('connection', function(client){
+    console.log('Client connected to Weather namespace.');
+    client.send("Welcome to 'Weather Updates'");
+});</pre></div></div><p>The function <code class="literal">socket.of</code> splits
+      the socket object into multiple unique namespaces, each with its own
+      rules for handling connections. If a client were to connect to
+      <span class="emphasis"><em>http://localhost:8080/weather</em></span> and issue an <code class="literal">emit()</code> command, its results would be processed
+      only within that namespace, and not within the
+      <span class="emphasis"><em>/upandrunning</em></span> <a id="I_indexterm4_d1e13316" class="indexterm"/><a id="I_indexterm4_d1e13318" class="indexterm"/>namespace.</p></div><div class="sect2" title="Using Socket.IO with Express"><div class="titlepage"><div><div><h2 class="title"><a id="id3308110"/>Using Socket.IO with Express</h2></div></div></div><p>There are many <a id="so7.2.2" class="indexterm"/><a id="ex7.2.2" class="indexterm"/>cases where you would want to use Socket.IO by itself
+      within Node as its own application or as a component of a larger website
+      architecture that includes non-Node components. However, when it’s used
+      as part of a full Node application using Express, you can gain an
+      enormous amount of efficiency by writing the entire software
+      stack—including the client-facing views—in the same language
+      (JavaScript).</p><p>Save <a class="xref" href="ch07s02.html#example7-21" title="Example 7-21. Attaching Socket.IO to an Express application: client code">Example 7-21</a> as <em class="filename">socket_express.html</em>.</p><div class="example"><a id="example7-21"/><p class="title">Example 7-21. Attaching Socket.IO to an Express application: client
+        code</p><div class="example-contents"><pre class="programlisting">&lt;script src="/socket.io/socket.io.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+var socket = io.connect('http://localhost:8080');
+socket.on('news', function(data) {
+  document.write('&lt;h1&gt;' + data.title + '&lt;/h1&gt;' );
+  document.write('&lt;p&gt;' + data.contents + '&lt;/p&gt;' );
+  if ( data.allowResponse ) {
+    socket.emit('scoop', { contents: 'News data received by client.' });
+  }
+});
+&lt;/script&gt;</pre></div></div><p>This example starts by connecting to the Socket.IO on port 8080.
+      Whenever the Socket.IO server sends a “news” event, the client writes
+      the new item’s title and contents to the browser page. If the news item
+      allows a response, the client socket emits a “scoop” event. The scoop
+      wouldn’t be very interesting to a real reporter; it only contains an
+      acknowledgment that the client received the original news.</p><p>This being an example press, the news server responds to the
+      “scoop” event by emitting another news story. The client will receive
+      this new story and print it to the screen also. To prevent this cycle
+      from continuing out of control, an <code class="literal">allowResponse</code> parameter is sent with the news
+      story. If it is false or not present at all (see <a class="xref" href="ch07s02.html#example7-22" title="Example 7-22. Attaching Socket.IO to an Express application: server code">Example 7-22</a>), the client will not send a scoop.</p><p><a class="xref" href="ch07s02.html#example7-22" title="Example 7-22. Attaching Socket.IO to an Express application: server code">Example 7-22</a> shows the Express server.</p><div class="example"><a id="example7-22"/><p class="title">Example 7-22. Attaching Socket.IO to an Express application: server
+        code</p><div class="example-contents"><pre class="programlisting">var app = require('express').createServer(),
+     io = require('socket.io').listen(app);
+
+app.listen(8080);
+
+app.get('/', function(req,res) {
+  res.sendfile(__dirname + '/socket_express.html');
+});
+
+io.sockets.on('connection', function(socket) {
+  socket.emit('news', {
+    title: 'Welcome to World News',    contents: 'This news flash was sent from Node.js!',
+    allowResponse: true
+  });
+  socket.on('scoop', function(data) {
+    socket.emit('news', {
+      title: 'Circular Emissions Worked',
+      contents: 'Received this content: ' + data.contents
+    });
+  });
+});</pre></div></div><p>The Express server is created first and then passed into Socket.IO
+      as a parameter. When the Express application is started with the
+      <code class="literal">listen()</code> function, both the web
+      server and socket server are activated. Next, a route for the base path
+      (<code class="literal">/</code>) is defined as a pass-through for sending the
+      client-side file created in <a class="xref" href="ch07s02.html#example7-21" title="Example 7-21. Attaching Socket.IO to an Express application: client code">Example 7-21</a>.</p><p>The server-side code for the news broadcaster looks very similar
+      to the client-side code for good reason. The same events (emit, on
+      message, connection) behave similarly in Node and in the web browser,
+      making connectivity straightforward. Because data is passed as
+      JavaScript objects between both endpoints, no additional parsing or
+      serialization is needed.</p><p>Clearly, we can very quickly gain a lot of power by plugging
+      Socket.IO into Express, but astute programmers will realize that this is
+      one-way communication of limited value, unless the connection initiated
+      by the user’s web browser is represented in the socket stream. Any
+      changes (logout, profile settings, etc.) should be reflected in any
+      socket actions, and vice versa. How to accomplish that? Sessions.</p><p>To illustrate the use of a session for authentication, let’s look
+      first at the client-side code, <em class="filename">views/socket.html</em>, shown in <a class="xref" href="ch07s02.html#example7-23" title="Example 7-23. Client HTML (Jade template): Socket.IO sessions">Example 7-23</a>.</p><div class="example"><a id="example7-23"/><p class="title">Example 7-23. Client HTML (Jade template): Socket.IO sessions</p><div class="example-contents"><pre class="programlisting">!!! 5
+html(lang='en')
+  head
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type='text/javascript')
+      var socket = io.connect('http://localhost:8080');
+      socket.on('emailchanged', function(data) {
+        document.getElementById('email').value = data.email;
+      });
+      var submitEmail = function(form) {
+        socket.emit('emailupdate', {email: form.email.value});
+        return false;
+      };
+  body
+    h1 Welcome!
+
+    form(onsubmit='return submitEmail(this);')
+      input(id='email', name='email', type='text', value=locals.email)
+      input(type='submit', value='Change Email')</pre></div></div><p>When rendered in a web browser, this page will display a form text
+      box with a “Change Email” call to action whose default value comes from
+      Express’s session data through the <code class="literal">locals.email</code> variable. Upon user input, the
+      application performs these actions:</p><div class="orderedlist"><ol class="orderedlist"><li class="listitem"><p>Create a Socket.IO connection and send all of the user’s email
+          updates as <a id="I_indexterm4_d1e13404" class="indexterm"/>an <code class="literal">emailupdate</code> event.</p></li><li class="listitem"><p>Listen for <code class="literal">emailchanged</code>
+          events and <a id="I_indexterm4_d1e13417" class="indexterm"/>replace the contents of the text box with the new
+          email from the server (more on this soon).</p></li></ol></div><p>Next, have a look at the Node.js portion of <a class="xref" href="ch07s02.html#example7-24" title="Example 7-24. Sharing session data between Express and Socket.IO">Example 7-24</a>.</p><div class="example"><a id="example7-24"/><p class="title">Example 7-24. Sharing session data between Express and Socket.IO</p><div class="example-contents"><pre class="programlisting">var io = require('socket.io');
+var express = require('express');
+var app = express.createServer();
+var store = new express.session.MemoryStore;
+var utils = require('connect').utils;
+var Session = require('connect').middleware.session.Session;
+
+app.configure(function() {
+  app.use(express.cookieParser());
+  app.use(express.session({secret: 'secretKey', key: 'express.sid', store: store}));
+  app.use(function(req, res) {
+    var sess = req.session;
+    res.render('socket.jade', {
+      email: sess.email || ''
+    });
+  });
+});
+
+// Start the app
+app.listen(8080);
+
+var sio = io.listen(app);
+
+sio.configure(function() {
+  sio.set('authorization', function (data, accept ) {
+    var cookies = utils.parseCookie(data.headers.cookie);
+    data.sessionID = cookies['express.sid'];
+    data.sessionStore = store;
+    store.get(data.sessionID, function(err, session) {
+      if ( err || !session ) {
+        return accept("Invalid session", false);
+      }
+      data.session = new Session(data, session);
+      accept(null,true);
+    });
+  });
+
+  sio.sockets.on('connection', function(socket) {
+    var session = socket.handshake.session;
+    socket.join(socket.handshake.sessionId);
+    socket.on('emailupdate', function(data) {
+      session.email = data.email;
+      session.save();
+      sio.sockets.in(socket.handshake.sessionId).emit('emailchanged', {
+        email: data.email
+      });
+    });
+  });
+});</pre></div></div><p>This example uses Connect, a middleware framework that simplifies
+      common tasks such as session management, working with cookies,
+      authentication, caching, performance metrics, and more. In this example,
+      the cookie and session tools are used to manipulate user data. Socket.IO
+      is not aware of Express and vice versa, so Socket.IO is not aware of
+      sessions when the user connects. However, both components need to
+      <a id="I_indexterm4_d1e13432" class="indexterm"/>use the <code class="literal">Session</code> object to share data.
+      This is an excellent demonstration of the <a id="I_indexterm4_d1e13441" class="indexterm"/><a id="I_indexterm4_d1e13444" class="indexterm"/>Separation of Concerns (SoC) programming
+      paradigm.<sup>[<a id="id3308493" href="#ftn.id3308493" class="footnote">19</a>]</sup></p><p>This example demonstrates using Socket.IO’s authorization, even
+      after connection, to parse the user’s headers. Because the session ID is
+      passed to the server as a cookie, you can use this value to read
+      Express’s session ID.</p><p>This time, the Express setup includes a line for session
+      management. The arguments used to build the session manager are a secret
+      key (used to prevent session tampering), the session key (used to store
+      the session ID in the web browser’s cookie), and a store object (used to
+      store session data for later retrieval). The store object is the most
+      important. Instead of letting Express create and manage the memory
+      store, this example creates a variable and passes it into Express. Now
+      the session store is available to the entire application, not just
+      Express.</p><p>Next, a route is created for the default (<code class="literal">/</code>)
+      web page. In previous Socket.IO examples, this function was used to
+      output HTML directly to the web browser. This time, Express will render
+      the contents of <em class="filename">views/socket.jade</em>
+      to the web browser. The second variable in <code class="literal">render()</code> is the email address stored in the
+      session, which is interpreted and used as the default text field value
+      in <a class="xref" href="ch07s02.html#example7-23" title="Example 7-23. Client HTML (Jade template): Socket.IO sessions">Example 7-23</a>.</p><p>The real action happens in Socket.IO’s <code class="literal">'authorization'</code> event. When the web browser
+      connects to the server, Socket.IO performs an authentication routine to
+      determine whether the connection should proceed. The criteria in this
+      case is a valid session, which was provided by Express when the user
+      loaded the web page. Socket.IO reads the session ID from the request
+      headers using <code class="literal">parseCookie</code> (part of
+      the Connect framework), loads the session from the memory store, and
+      creates a <code class="literal">Session</code> object with the
+      information it receives.</p><p>The data passed to the authorization event is stored in
+      the<a id="I_indexterm4_d1e13485" class="indexterm"/> socket’s <code class="literal">handshake</code>
+      property. Therefore, saving the session object into the data object
+      makes it available later in the socket’s lifecycle. When creating the
+      <code class="literal">Session</code> object, use the memory store
+      that was created and passed into Express; now both Express and Socket.IO
+      are able to access the same session data—Express by manipulating the
+      <code class="literal">req.session</code> object, and sockets by
+      manipulating the <code class="literal">socket.handshake.session</code> object.</p><p>Assuming all goes well, <a id="I_indexterm4_d1e13505" class="indexterm"/>calling <code class="literal">accept()</code>
+      authenticates the socket and allows the connection to continue.</p><p>Now suppose the user accesses your site from more than one tab in
+      his web browser. There would be two connections from the same session
+      created, so how would you handle events that need to update connected
+      sockets? Socket.IO provides support for <em class="firstterm">rooms</em>, or
+      <em class="firstterm">channels</em> if you prefer. By initiating a <code class="literal">join()</code> command with <code class="literal">sessionId</code> as the argument in <a class="xref" href="ch07s02.html#example7-24" title="Example 7-24. Sharing session data between Express and Socket.IO">Example 7-24</a>, the socket transparently created a dedicated
+      channel you can use to send messages to all connections currently in use
+      by that user. Logging out is an obvious use for this technique: when the
+      user logs out from one tab, the logout command will instantly transmit
+      to all the others, leaving all of the user’s views of the application in
+      a consistent <a id="I_indexterm4_d1e13531" class="indexterm"/><a id="I_indexterm4_d1e13533" class="indexterm"/><a id="I_indexterm4_d1e13535" class="indexterm"/>state.</p><div class="warning" title="Warning"><h3 class="title">Warning</h3><p>Always remember to execute <code class="literal">session.save()</code> after changing session data.
+        Otherwise, the changes will not be reflected on subsequent requests.</p></div></div><div class="footnotes"><br/><hr/><div class="footnote"><p><sup>[<a id="ftn.id3308493" href="#id3308493" class="para">19</a>] </sup>SoC refers to the practice of breaking down software into
+          smaller single-purpose parts (concerns) that have as little
+          overlapping functionality as possible. Middleware enables this style
+          of design by allowing totally separate modules to interact in a
+          common environment without needing to be aware of each other.
+          Although, as we have seen with modules such as
+          <code class="literal">bodyParser()</code>, it remains up to the programmer to
+          understand how the concerns ultimately interact and use them in the
+          appropriate order and context.</p></div></div></div></body></html>

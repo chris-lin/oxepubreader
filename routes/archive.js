@@ -12,15 +12,19 @@ exports.unzip = function ( req, res, next ) {
         'name': filename,
         'zipEntries' : []
     }
-
-    req.target = zipDirectory + filename ;
-    
-    //  Extract File
-    fs.mkdir(req.target, '0777', function () {
-        fs.createReadStream( req.query.entry ).pipe( unzip.Extract({ 'path': req.target }) );
-        parse();
+    fs.exists(filepath, function (exists) {
+        if (exists) {
+            req.target = zipDirectory + filename ;
+            
+            //  Extract File
+            fs.mkdir(req.target, '0777', function () {
+                fs.createReadStream( req.query.entry ).pipe( unzip.Extract({ 'path': req.target }) );
+                parse();
+            });
+        } else {
+            res.redirect( '/' );
+        }
     });
-    
     //  parse zip entry
     function parse ( file ) {
         fs.createReadStream( req.query.entry ).pipe(unzip.Parse())

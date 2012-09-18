@@ -7,14 +7,18 @@
     
 }
 #nodeReaderIframe {
-    border:0px solid #000;
-    width:100%;
-    overflow:hidden;
+    border: 0px solid #000;
+    margin: 0 auto;
+    width:80%;
+    overflow-x:hidden;
 }
 .nodeReaderContainer {
-    position: absolute;
-    left: 12%;
-    right: 12%;
+    overflow:hidden;
+    width:100%;
+    
+    
+    text-align: center;
+    
 }
 
 #nodeReaderPageTurn {

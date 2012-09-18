@@ -6,18 +6,18 @@ $(document).ready(function () {
     togglePrevious(page.isPrevious);
     toggleNext(page.isNext)
     
-    $('.pageButton').on('click', function () {
+    $('.pageButton').on('mousedown', function () {
         var pageNumber = $(this).attr('data-pageNumber');
         page.changePage(pageNumber);
         togglePrevious(page.isPrevious);
         toggleNext(page.isNext)
     });
     
-    $('#home').on('click', function () {
+    $('#home').on('mousedown', function () {
         page.initFirstPage();
     });
     
-    $('.pageTurnArea').on('click', function () {
+    $('.pageTurnArea').on('mousedown', function () {
         if ( $(this).hasClass('arrowLeft')) {
             console.log(page.currentPageNum)
             page.changePage(page.currentPageNum - 1 );

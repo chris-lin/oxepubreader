@@ -16,7 +16,7 @@ exports.index = function ( req, res ){
     console.log(linksArray)
     
     req.session.book = {
-        'name': zipInfo.name,
+        'name': zipInfo.name.split('.').shift(),
         'path': req.target,
         'links': linksArray.sort() 
     };
@@ -25,17 +25,22 @@ exports.index = function ( req, res ){
 };
 
 exports.read = function ( req, res ){
-    //console.log(req.target)
-    var bookinfo = req.session.book;
-    
-    req.session.currentPage = bookinfo.path + '/' + bookinfo.links[0].entryName;
-    
-    res.render('reader/reader', { 
-        'title': 'OXEPUBREADER',
-        'bookname': bookinfo.name,
-        'path': bookinfo.path,
-        'links': bookinfo.links 
-    });
+    console.log(req.session.book)
+    if (req.session.book != undefined ) {
+        var bookinfo = req.session.book;
+        
+        req.session.currentPage = bookinfo.path + '/' + bookinfo.links[0].entryName;
+        
+        res.render('reader/reader', { 
+            'title': 'OXEPUBREADER',
+            'bookname': bookinfo.name,
+            'path': bookinfo.path,
+            'links': bookinfo.links 
+        });
+    } else {
+        res.redirect( '/' );
+    }
+   
 };
 
 exports.getData = function ( req, res ){

@@ -18,7 +18,7 @@
 }
 
 #nodeReaderPageTurn {
-    position: absolute;
+    position: fixed;
     z-index:300;
     left:0;
     right:0;
@@ -27,33 +27,39 @@
     
 }
 .pageTurnArea {
-    width:40px;
+    width:48px;
     position: absolute;
     z-index:300;
     top:0;
     bottom:0;
+    height:100%;
+    cursor: pointer;
 }
 .arrowLeft {
     left:0;
 }
-.arrowLeft .arrowButton {
-    background: url("../images/tri-left.png") repeat transparent;
-}
-
 .arrowRight {
     right:0;
 }
-
+.arrowLeft .arrowButton {
+    background: url("../images/ui_item.png") -0px -48px no-repeat transparent;
+}
+.arrowLeft:hover .arrowButton{
+    background: url("../images/ui_item.png") -0px -0px no-repeat transparent;
+}
 .arrowRight .arrowButton {
-    background: url("../images/tri-right.png") repeat scroll -420px -356px transparent;
+    background: url("../images/ui_item.png") -48px -48px no-repeat  transparent;
+}
+.arrowRight:hover .arrowButton {
+    background: url("../images/ui_item.png") -48px -0px no-repeat  transparent;
 }
 .arrowButton {
+    position: relative;
     top: 50%;
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
     margin-left: auto;
     margin-right: auto;
-    position: relative
 }
 @media (min-width: 979px) {
     #nodeReaderPageTurn {

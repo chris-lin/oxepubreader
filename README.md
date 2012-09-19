@@ -2,6 +2,11 @@
 
 OSSII OXEpubReader
 
+2012/09/19: release version 0.1.0 
+
+Please upload .zip file to test.
+
+Reader support format: html, xhtml
 
 ## NodeJS Modules: 
 

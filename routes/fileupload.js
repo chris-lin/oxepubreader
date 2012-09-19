@@ -8,7 +8,7 @@ exports.fileupload = function (req, res) {
 
     var fs = require('fs');
     var tmpFile = req.files.files;
-    var tmpPath = file.path
+    var tmpPath = tmpFile.path
     var targetPath = "./data/" + tmpFile.name;
     
     fs.rename(tmpPath , targetPath , function (err) {

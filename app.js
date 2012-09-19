@@ -27,7 +27,7 @@ app.configure(function(){
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.cookieParser());
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({uploadDir: __dirname + '/data'}));
   app.use(express.methodOverride());
   app.use(express.session({
     secret: 'OSSII Reader',
@@ -41,7 +41,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-//app.get('/index', routes.index);
+//app.get('/', routes.index);
 app.get('/', fileupload.index);
 app.get('/unzip', archive.unzip, reader.index );
 app.get('/reader', reader.read );

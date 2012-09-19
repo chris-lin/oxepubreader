@@ -10,7 +10,7 @@
     border: 0px solid #000;
     margin: 0 auto;
     width:80%;
-    overflow-x:hidden;
+    overflow:hidden;
 }
 .nodeReaderContainer {
     overflow:hidden;

@@ -1,5 +1,7 @@
 body {
-    
-     word-wrap: break-word;
-     word-break: break-all;
+    color:#333333;
+    word-wrap: break-word;
+    word-break: break-all;
+    //writing-mode: vertical-rl;
+    //-webkit-writing-mode: vertical-rl;
 }

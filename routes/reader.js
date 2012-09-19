@@ -6,14 +6,28 @@ exports.index = function ( req, res ){
     var linksArray = [];
     var entriesLength = zipEntries.length;
     
+    var format = ['html', 'xhtml'];
+    
+    function checkFormat ( subname ) {
+       
+        for (var i = 0;i<format.length;i++) {
+            console.log('-' + subname + '-')
+            if (format[i] == subname ) {
+                return true;                  
+            }
+        }
+        return false;
+    }
+    
     while ( entriesLength) {
-        
-        if (zipEntries[ entriesLength -1 ]['type'] == 'File' && zipEntries[ entriesLength -1 ]['path'].split('.').pop() == 'html') {
+        var subName = zipEntries[ entriesLength -1 ]['path'].split('.').pop();
+
+        if (zipEntries[ entriesLength -1 ]['type'] == 'File' && checkFormat(subName)) {
             linksArray.push(zipEntries[ entriesLength -1 ]['path']);
         }
         entriesLength--;
     };
-    console.log(linksArray)
+    //console.log(linksArray)
     
     req.session.book = {
         'name': zipInfo.name.split('.').shift(),

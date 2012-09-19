@@ -37,7 +37,7 @@ exports.unzip = function ( req, res, next ) {
             })
             .on('end', function () {
                 req.zipInfo = zipInfo;
-                console.log(zipInfo)
+                //console.log(zipInfo)
                 next();
             });
     }

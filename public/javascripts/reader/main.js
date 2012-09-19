@@ -1,4 +1,15 @@
+
 $(document).ready(function () {
+    
+    // 頁面高度調整
+    $(window).resizeTrigger({
+        'onEvent': function () {
+            var container = $('#nodeReaderIframe')[0].contentWindow.document;
+            var sourceHeight = $('body', container).height();
+            $('#nodeReaderIframe').height(sourceHeight + 100);
+        }
+    });
+    
     $("body").css({ "-webkit-user-select": "none" });
     var page = new Page( );
     
@@ -19,19 +30,18 @@ $(document).ready(function () {
     
     $('.pageTurnArea').on('mousedown', function () {
         if ( $(this).hasClass('arrowLeft')) {
-            console.log(page.currentPageNum)
-            page.changePage(page.currentPageNum - 1 );
+            //console.log(page.currentPageNum)
+            page.changePage(parseInt(page.currentPageNum) - 1 );
             togglePrevious(page.isPrevious);
             toggleNext(page.isNext)
         } else {
-            console.log('right')
-            page.changePage(page.currentPageNum + 1 );
+            page.changePage(parseInt(page.currentPageNum) + 1 );
             togglePrevious(page.isPrevious);
             toggleNext(page.isNext)
         }
     });
     
-    
+    //設定上頁按鈕
     function togglePrevious ( status ) {
         if ( status ) {
             $('.arrowLeft').show();
@@ -40,7 +50,7 @@ $(document).ready(function () {
             $('.arrowLeft').hide();
         }
     };
-    
+    //設定下頁按鈕
     function toggleNext ( status ) {
         if ( status ) {
             $('.arrowRight').show();
@@ -82,12 +92,13 @@ Page.prototype.changePage = function ( pageNum ) {
     }
     this.currentPageNum = pageNum; 
     var page = this.pages[pageNum];
+    console.log(pageNum)
     var container = $('#nodeReaderIframe')[0].contentWindow.document;
     
     var request = $.ajax({
         url: "/getData",
         type: "POST",
-        data: {page : page},
+        data: {'page' : page},
         dataType: "html"
     });
     
@@ -95,10 +106,11 @@ Page.prototype.changePage = function ( pageNum ) {
         $('body', container).html(msg);
         var sourceHeight = $('body', container).height();
         $('#nodeReaderIframe').height(sourceHeight + 100);
+        $('head', container).append('<link href="/stylesheets/readerContainer.css" rel="stylesheet">')
         //console.log( sourceHeight );
     });
     
     request.fail(function(jqXHR, textStatus) {
-        alert( "Request failed: " + textStatus );
+        //alert( "Request failed: " + textStatus );
     });
 } 

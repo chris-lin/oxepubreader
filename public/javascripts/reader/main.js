@@ -92,7 +92,7 @@ Page.prototype.changePage = function ( pageNum ) {
     }
     this.currentPageNum = pageNum; 
     var page = this.pages[pageNum];
-    console.log(pageNum)
+    //console.log(pageNum)
     var container = $('#nodeReaderIframe')[0].contentWindow.document;
     
     var request = $.ajax({

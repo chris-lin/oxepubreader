@@ -1,6 +1,6 @@
 {
   "name": "oxepubreader",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node app"
@@ -10,6 +10,5 @@
     "connect": "2.4.5",
     "jade": "*",
     "unzip" : "0.0.3",
-    "mongoose":"*"
   }
 }

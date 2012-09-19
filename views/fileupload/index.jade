@@ -4,7 +4,7 @@ block file-update
     .row-fluid
         .span8
             form#fileupload(method="post",action="/file_upload"  , enctype="multipart/form-data")
-                p locale.fileupload.start：
+                p 請上傳內含html or xhtml的 .zip 檔案：
                 input#files(type="file", name="files")
                 input(class="btn btn-primary", type="submit", value="送出")
         

@@ -11,7 +11,7 @@ exports.index = function ( req, res ){
     function checkFormat ( subname ) {
        
         for (var i = 0;i<format.length;i++) {
-            console.log('-' + subname + '-')
+            //console.log('-' + subname + '-')
             if (format[i] == subname ) {
                 return true;                  
             }
@@ -39,7 +39,7 @@ exports.index = function ( req, res ){
 };
 
 exports.read = function ( req, res ){
-    console.log(req.session.book)
+    //console.log(req.session.book)
     if (req.session.book != undefined ) {
         var bookinfo = req.session.book;
         

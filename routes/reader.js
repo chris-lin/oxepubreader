@@ -9,13 +9,13 @@ exports.index = function ( req, res ){
     var format = ['html', 'xhtml'];
     
     function checkFormat ( subname ) {
-       
+        
         for (var i = 0;i<format.length;i++) {
             //console.log('-' + subname + '-')
             if (format[i] == subname ) {
                 return true;                  
-            }
-        }
+            };
+        };
         return false;
     }
     

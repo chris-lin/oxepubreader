@@ -1,0 +1,10 @@
+body {
+    background: #7abcff; /* Old browsers */
+  
+}
+#dropArea {
+    border: 10px dashed #C9E5E9;
+    width: 300px;
+    min-height: 300px;
+    margin: 20px auto;
+}

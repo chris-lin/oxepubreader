@@ -41,3 +41,6 @@ body {
     display: block;
     background-color: #4992FF;
 }
+#dropTip label {
+    font-size: 10px;
+}

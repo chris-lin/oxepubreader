@@ -67,25 +67,18 @@ exports.ajaxUpload = function (req, res) {
     };
     console.log(tmpFile.type);
     
-    switch (tmpFile.type) {
-        case 'application/epub+zip': 
-
-            break;
-        case 'application/octet-stream':
-
-            break;
-        case 'application/zip':
-
-            break;
-        default:
-            fs.unlink(tmpPath, function () {
+    var subname = tmpFile.name.split('.').pop();
+    
+    if (subname != 'zip' && subname !='epub') {
+        fs.unlink(tmpPath, function () {
                 fileInfo.error = true;
                 fileInfo.status = 'file type wrong';
                 res.redirect('/');
                 return false;
-            });
-            return false;
+        });
+        return false;
     }
+
     
     fs.rename(tmpPath , targetPath , function (err) {
         if(!err){

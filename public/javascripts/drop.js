@@ -11,17 +11,20 @@ $(document).ready(function () {
         e.preventDefault();  
     })
     .on('drop',function (e) {
-        $(e.target).css('background-color','#FFF')
+        $(e.target).css('background-color','rgba(255, 255, 255  , 0)');
        //console.log($(e.target));
         var files = e.originalEvent.dataTransfer.files;
-        fileUpload(files)
+        var subname = files[0].name.split('.').pop();
         
+        if (subname == 'zip' || subname =='epub') {
+            fileUpload(files);
+        };
         e.stopPropagation();
         e.preventDefault();
     })
     .on('dragend',function (e) {
-        $(e.target).css('background-color','#fff');
-        //console.log('end');
+        $(e.target).css('background-color','rgba(210, 250, 250, 0)');
+        console.log('end');
         e.stopPropagation();
         e.preventDefault();
     })
@@ -44,7 +47,12 @@ $(document).ready(function () {
             if (xhr.readyState == 4) {
                 if (xhr.responseText != ""){
                     content = JSON.parse(xhr.responseText); 
-                    window.location.href ='/unzip?entry=' + content.target;
+                    if (content.success) {
+                        window.location.href ='/unzip?entry=' + content.target;
+                    } else {
+                        $('.dropProgress span').css({'width': '0'});
+                    }
+                   
                 }else{
                     console.log( locale_filename + " : File Not Found or Worng Format");
                 };

@@ -9,6 +9,8 @@ exports.unzip = function ( req, res, next ) {
     var filepath = req.query.entry;
     var filename = filepath.split('/').pop();
     var zipInfo = {
+        'source': filepath,
+        'path': zipDirectory + filename,
         'name': filename,
         'zipEntries' : []
     }
@@ -22,9 +24,8 @@ exports.unzip = function ( req, res, next ) {
                     //.on('end', function () {
                         console.log('end extract');
                         parse();
-                    //})
-                
-                
+                    //});
+                return false;
             });
         } else {
             res.redirect( '/' );
@@ -44,6 +45,7 @@ exports.unzip = function ( req, res, next ) {
                 req.zipInfo = zipInfo;
                 //console.log(zipInfo)
                 next();
+                return false;
             });
     }
 };

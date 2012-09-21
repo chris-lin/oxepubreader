@@ -1,4 +1,5 @@
 var fs = require("fs");
+var rimraf = require("rimraf");
 
 exports.index = function ( req, res ){
     var zipInfo = req.zipInfo;
@@ -28,14 +29,25 @@ exports.index = function ( req, res ){
         entriesLength--;
     };
     //console.log(linksArray)
-    
-    req.session.book = {
-        'name': zipInfo.name.split('.').shift(),
-        'path': req.target,
-        'links': linksArray.sort() 
-    };
-    res.redirect( '/reader' );
-    
+    if (linksArray.length == 0 ) {
+        console.log(zipInfo.path);
+        fs.unlink(zipInfo.source, function (err) {
+            rimraf(zipInfo.path, function (err) {
+                console.log('rmdir: ' + err);
+                res.redirect('/');
+                return false;
+            });
+        });
+         
+         
+    } else {
+        req.session.book = {
+            'name': zipInfo.name.split('.').shift(),
+            'path': req.target,
+            'links': linksArray.sort() 
+        };
+        res.redirect( '/reader' );
+    }
 };
 
 exports.read = function ( req, res ){

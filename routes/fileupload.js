@@ -98,7 +98,7 @@ exports.ajaxUpload = function (req, res) {
             res.writeHead(200, {"Content-Type":"application/json; charset=utf-8","Content-Length":msg.length});
             res.end(msg);
         
-        
+        return false;
     });
 
     

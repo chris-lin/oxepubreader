@@ -2,7 +2,7 @@
 
 rm $0
 
-./reader
+./index
 
 echo "
 

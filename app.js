@@ -21,7 +21,7 @@ var storeMemory = new MemoryStore({
 var app = express();
 
 app.configure(function(){
-    app.set('port', process.env.PORT || 3001);
+    app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use(express.favicon());
@@ -41,8 +41,8 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/dnd', routes.index);
-app.get('/', fileupload.index);
+app.get('/', routes.index);
+//app.get('/', fileupload.index);
 app.get('/unzip', archive.unzip, reader.index );
 app.get('/reader', reader.read );
 app.post('/getData', reader.getData );

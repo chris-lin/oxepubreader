@@ -1,17 +1,17 @@
-document.ondragover = function(e){e.preventDefault();};
-document.ondrop = function(e){e.preventDefault();};
+
 
 $(document).ready(function () {
-  
+    document.ondragover = function(e){e.preventDefault();};
+    document.ondrop = function(e){e.preventDefault();};
     $('#dropArea')
     .on('dragover', function (e) {
-        $(e.target).css('background-color','#D6F6FB');
-        console.log('over');
+        $(e.target).css('background-color','rgba(210, 250, 250, 0.8)');
+        //console.log('over');
         e.stopPropagation();
         e.preventDefault();  
     })
     .on('drop',function (e) {
-        $(e.target).css('background-color','#7abcff')
+        $(e.target).css('background-color','#FFF')
        //console.log($(e.target));
         var files = e.originalEvent.dataTransfer.files;
         fileUpload(files)
@@ -20,9 +20,12 @@ $(document).ready(function () {
         e.preventDefault();
     })
     .on('dragend',function (e) {
-        $(e.target).css('background-color','#7abcff');
-        console.log('end');
+        $(e.target).css('background-color','#fff');
+        //console.log('end');
         e.stopPropagation();
+        e.preventDefault();
+    })
+    .on('dragstart', function(e){
         e.preventDefault();
     });
 
@@ -36,14 +39,20 @@ $(document).ready(function () {
         
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/ajaxUpload');
-        xhr.onload = function(a) {
-            var res = JSON.parse(xhr.response);
-            
-            //console.log('xhr onload');
-            window.location.href ='/unzip?entry=' + res.target;
-        };
-        
+        xhr.onreadystatechange = function() {
+            console.log('xhr.readyState ' + xhr.readyState );
+            console.log('xhr.responseText ' + xhr.responseText );
+            if (xhr.readyState == 4) {
+                if (xhr.responseText != ""){
+                    content = JSON.parse(xhr.responseText); 
+                    window.location.href ='/unzip?entry=' + content.target;
+                }else{
+                    console.log( locale_filename + " : File Not Found or Worng Format");
+                };
+            };
+        }
         xhr.upload.onprogress = function (event) {
+            $('.dropProgress span').css({'width': (event.loaded / event.total * 100) + '%'});
             if (event.lengthComputable) {
                 var complete = (event.loaded / event.total * 100 | 0);
                 console.log(complete);

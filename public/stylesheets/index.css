@@ -1,10 +1,43 @@
 body {
-    background: #7abcff; /* Old browsers */
-  
+    background: #fff; /* Old browsers */
+    text-align: center;
 }
 #dropArea {
-    border: 10px dashed #C9E5E9;
-    width: 300px;
-    min-height: 300px;
-    margin: 20px auto;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 99;
+    
+    
+}
+#dropTip {
+    z-index: 1;
+    font-size: 22px;
+    position: absolute;
+    width: 100%;
+    height:60px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+#dropTip .dropProgress {
+    width:95%;
+    height:2px;
+    background: #fff;
+    position: relative;
+    margin: 10px auto;
+    padding: 0;
+}
+#dropTip .dropProgress span {
+    width:0;
+    height:2px;
+    display: block;
+    background-color: #4992FF;
 }

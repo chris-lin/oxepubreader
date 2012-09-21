@@ -19,10 +19,10 @@ exports.unzip = function ( req, res, next ) {
             //  Extract File
             fs.mkdir(req.target, '0777', function () {
                 fs.createReadStream( req.query.entry ).pipe( unzip.Extract({ 'path': req.target }))
-                    .on('end', function () {
+                    //.on('end', function () {
                         console.log('end extract');
                         parse();
-                    })
+                    //})
                 
                 
             });

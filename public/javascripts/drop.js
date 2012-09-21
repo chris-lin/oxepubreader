@@ -33,15 +33,14 @@ $(document).ready(function () {
         var formData = new FormData();
 
         for (var i = 0; i < files.length; i++) {
-            console.log(files[i])
+            //console.log(files[i])
             formData.append('file', files[i]);
         }
         
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/ajaxUpload');
         xhr.onreadystatechange = function() {
-            console.log('xhr.readyState ' + xhr.readyState );
-            console.log('xhr.responseText ' + xhr.responseText );
+            
             if (xhr.readyState == 4) {
                 if (xhr.responseText != ""){
                     content = JSON.parse(xhr.responseText); 
